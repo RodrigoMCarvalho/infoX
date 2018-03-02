@@ -1,2 +1,0 @@
-# infoX
-CRUD - Java/MySQL
