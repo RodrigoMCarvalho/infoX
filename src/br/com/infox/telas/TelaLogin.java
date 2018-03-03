@@ -19,12 +19,30 @@ public class TelaLogin extends javax.swing.JFrame {
             pst.setString(2, txtSenha.getText());
             //a linha abaixo executa a query
             rs = pst.executeQuery();
+
             //se existir usuário e senha correspondente
             if (rs.next()) {
-                TelaPrincipal principal = new TelaPrincipal();
-                principal.setVisible(true);
-                this.dispose();   //fecha a tela de login, após fechar conexão com o BD
-                conexao.close();
+                //verifica o campo(6) perfil da tabela no BD
+                String perfil = rs.getString(6);
+                //System.out.println(perfil); Para verificar se a varável perfil obteve o campo perfil da tbusuarios
+
+                //tratamento do perfil do usuário
+                if (perfil.equals("admin")) {
+                    TelaPrincipal principal = new TelaPrincipal();
+                    principal.setVisible(true);
+                    TelaPrincipal.menRela.setEnabled(true);     //os campos são desabilitados nas propriedades do Swing(public Static
+                    TelaPrincipal.menCadUsuarios.setEnabled(true);
+                    TelaPrincipal.lblUsuario.setText(rs.getString(2)); //Pega os dados do campo(2) de usuários da tabela.
+                    this.dispose();   //fecha a tela de login, após fechar conexão com o BD
+                    conexao.close();
+                } else {
+                    TelaPrincipal principa = new TelaPrincipal();
+                    principa.setVisible(true);
+                    TelaPrincipal.lblUsuario.setText(rs.getString(2));
+                    this.dispose();
+                    conexao.close();
+                }
+
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário ou/e senha inválido(s).");
             }
