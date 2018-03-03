@@ -12,6 +12,7 @@ public class ModuloConexao {
         String user = "root";
         String password = "";
 
+        //Realiza a conexão com o BD ou retorna null
         try {
             Class.forName(driver);
             conexao = DriverManager.getConnection(url, user, password);
