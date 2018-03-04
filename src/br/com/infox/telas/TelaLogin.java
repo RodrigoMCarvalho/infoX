@@ -56,9 +56,11 @@ public class TelaLogin extends javax.swing.JFrame {
         initComponents();
         //aciona o botão com a tecla Enter
         getRootPane().setDefaultButton(btnLogin);
+        //chama o método conector da classe ModuloConexao com os dados do BD
         conexao = ModuloConexao.conector();
-        //System.out.println(conexao);
 
+        //System.out.println(conexao);
+        //testa se a conexão com o BD está disponível
         if (conexao != null) {
             lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/dbok.png")));
         } else {
