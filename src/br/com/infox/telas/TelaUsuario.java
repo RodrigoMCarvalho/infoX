@@ -14,7 +14,46 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         initComponents();
         //chama o método conector da classe ModuloConexao com os dados do BD
         conexao = ModuloConexao.conector();
-        cboUserPerfil.setSelectedItem(null);
+    }
+
+    private void limpaCampos() {
+        //limpa os campos para o usuário realizar um novo cadastro, se o ID for inexistente
+        txtUser.setText(null);
+        txtUserFone.setText(null);
+        txtUserLogin.setText(null);
+        txtUserPass.setText(null);
+    }
+
+    private void adicionar() {
+        String sql = "insert into tbusuarios (iduser,usuario,fone,login,senha,perfil) values (?,?,?,?,?,?)";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUserId.getText());
+            pst.setString(2, txtUser.getText());
+            pst.setString(3, txtUserFone.getText());
+            pst.setString(4, txtUserLogin.getText());
+            pst.setString(5, txtUserPass.getText());
+            pst.setString(6, cboUserPerfil.getSelectedItem().toString());
+
+            //validação do preenchimento dos campos obrigatórios
+            if (txtUserId.getText().isEmpty() || txtUser.getText().isEmpty()
+                    || txtUserLogin.getText().isEmpty() || txtUserPass.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.");
+
+            } else {
+                //a linha abaixo atualiza os dados no Banco de Dados
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso!");
+                    txtUserId.setText(null); //limpa o campo ID, pois o método limpaDados não o faz
+                    limpaCampos();
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
     }
 
     public void consultar() {
@@ -37,8 +76,39 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 txtUserFone.setText(null);
                 txtUserLogin.setText(null);
                 txtUserPass.setText(null);
-                cboUserPerfil.setSelectedItem(null);
 
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }
+
+    private void alterar() {
+        String sql = "update tbusuarios set usuario=?, fone=?, login=?, senha=?, perfil=? where iduser=?";
+
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUser.getText());
+            pst.setString(2, txtUserFone.getText());
+            pst.setString(3, txtUserLogin.getText());
+            pst.setString(4, txtUserPass.getText());
+            pst.setString(5, cboUserPerfil.getSelectedItem().toString());
+            pst.setString(6, txtUserId.getText());
+
+            //validação do preenchimento dos campos obrigatórios
+            if (txtUserId.getText().isEmpty() || txtUser.getText().isEmpty()
+                    || txtUserLogin.getText().isEmpty() || txtUserPass.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.");
+
+            } else {
+                //a linha abaixo atualiza os dados no Banco de Dados
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Dados alterados com sucesso!");
+                    txtUserId.setText(null); //limpa o campo ID, pois o método limpaDados não o faz
+                    limpaCampos();
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -99,11 +169,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         txtUser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         txtUserLogin.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtUserLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUserLoginActionPerformed(evt);
-            }
-        });
 
         txtUserPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -117,6 +182,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUserCreate.setToolTipText("Adicionar");
         btnUserCreate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUserCreate.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnUserCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserCreateActionPerformed(evt);
+            }
+        });
 
         btnUserRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/Read.png"))); // NOI18N
         btnUserRead.setToolTipText("Consultar");
@@ -132,6 +202,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUserUpdate.setToolTipText("Alterar");
         btnUserUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUserUpdate.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnUserUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserUpdateActionPerformed(evt);
+            }
+        });
 
         btnUserDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/Delete.png"))); // NOI18N
         btnUserDelete.setToolTipText("Excluir");
@@ -224,14 +299,20 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         setBounds(0, 0, 640, 480);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUserLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserLoginActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUserLoginActionPerformed
-
     private void btnUserReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserReadActionPerformed
         //chama o método consultar
         consultar();
     }//GEN-LAST:event_btnUserReadActionPerformed
+
+    private void btnUserCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserCreateActionPerformed
+        //chama o método adicionar
+        adicionar();
+    }//GEN-LAST:event_btnUserCreateActionPerformed
+
+    private void btnUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserUpdateActionPerformed
+        //chama o método alteraradmin
+        alterar();
+    }//GEN-LAST:event_btnUserUpdateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUserCreate;
