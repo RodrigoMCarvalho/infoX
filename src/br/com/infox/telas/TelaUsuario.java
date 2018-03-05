@@ -64,7 +64,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             rs = pst.executeQuery();
             if (rs.next()) { //se existir o ID correspondente
                 //preenchimento com os dados da tabela
-                txtUser.setText(rs.getString(2)); //2º campo da tabela
+                txtUser.setText(rs.getString(2)); //2º campo da tabela  rs -> possui os dados da tabela
                 txtUserFone.setText(rs.getString(3));
                 txtUserLogin.setText(rs.getString(4));
                 txtUserPass.setText(rs.getString(5));
@@ -114,6 +114,28 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, e);
         }
 
+    }
+
+    private void remover() {
+        //confirmação para excluir o usuário
+        int confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o usuário?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            String sql = "delete from tbusuarios where iduser=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtUserId.getText());
+                int removido = pst.executeUpdate();
+                //valida se o usuário foi removido
+                if (removido > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário removido com sucesso.");
+                    limpaCampos();
+                } else {
+                }
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -212,6 +234,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUserDelete.setToolTipText("Excluir");
         btnUserDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUserDelete.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnUserDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -310,9 +337,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnUserCreateActionPerformed
 
     private void btnUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserUpdateActionPerformed
-        //chama o método alteraradmin
+        //chama o método alterar
         alterar();
     }//GEN-LAST:event_btnUserUpdateActionPerformed
+
+    private void btnUserDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserDeleteActionPerformed
+        //chama o método remover
+        remover();
+    }//GEN-LAST:event_btnUserDeleteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUserCreate;
