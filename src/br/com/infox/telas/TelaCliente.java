@@ -26,6 +26,9 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         txtFone.setText(null);
         txtEmail.setText(null);
         txtCliID.setText(null);
+
+        //botão ADICIONAR habilitado. Vide comentários no método setarDados()
+        btnIncluir.setEnabled(true);
     }
 
     private void adicionar() {
@@ -56,7 +59,8 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }
 
     private void consultaCliente() {
-        String sql = "select * from tbclientes where nomecli like ?";
+        //caso nao altere o nome das colunas, será exibido o título "nomecli" no sistema
+        String sql = "select idcli as ID,nomecli as Nome,endcli as Endereço,fonecli as Telefone,emailcli as Email from  tbclientes where nomecli like ?";
         try {
             pst = conexao.prepareStatement(sql);
             //atenção para o % que é a continuação do comando SQL
@@ -94,7 +98,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }
 
     private void remover() {
-        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do cliente do sistema?", "Atenção", JOptionPane.YES_NO_OPTION);
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do cliente no sistema?", "Atenção", JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION) {
             String sql = "delete from tbclientes where idcli=?";
             try {
@@ -105,7 +109,6 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso.");
                     consultaCliente(); //para atualizar a pesquisa após a exclusão
                     limpaCampos();
-
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -113,7 +116,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         }
     }
 
-    //o método abaixo é para selecionar campos da tabela para edição ou exclusão
+    //o método abaixo é para selecionar os campos da tabela para alteração ou exclusão, preenchendo os dados no sistema
     private void setarCampos() {
         int setar = tblClientes.getSelectedRow();
         txtCliID.setText(tblClientes.getModel().getValueAt(setar, 0).toString());
@@ -121,6 +124,11 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         txtCliEnd.setText(tblClientes.getModel().getValueAt(setar, 2).toString());
         txtFone.setText(tblClientes.getModel().getValueAt(setar, 3).toString());
         txtEmail.setText(tblClientes.getModel().getValueAt(setar, 4).toString());
+
+        //a linha abaixo desabilita o botão ADICIONAR quando for selecionado algum usuário
+        //afim de nao duplicar os dados admiacidentalmente no BD
+        //*OBS: ao acionar o método limpaDados é habilitado o botão novamente
+        btnIncluir.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -187,7 +195,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/seach.png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/busca.png"))); // NOI18N
 
         txtCliPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -355,7 +363,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         adicionar();
     }//GEN-LAST:event_btnIncluirActionPerformed
 
-    //o evento abaixo é do tipo "enquanto for digitando"
+    //o evento abaixo é do tipo "enquanto for digitando", com atualização em tempo real
     private void txtCliPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCliPesquisarKeyReleased
 
         consultaCliente();

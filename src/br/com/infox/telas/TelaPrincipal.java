@@ -74,6 +74,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menCadOs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.ALT_MASK));
         menCadOs.setText("OS");
+        menCadOs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menCadOsActionPerformed(evt);
+            }
+        });
         menCad.add(menCadOs);
 
         menCadUsuarios.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
@@ -204,6 +209,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //habilita o form clientes dentro do desktop pane
         desktop.add(cliente);
     }//GEN-LAST:event_menCadCliActionPerformed
+
+    private void menCadOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCadOsActionPerformed
+
+        TelaOS os = new TelaOS();
+        os.setVisible(true);
+        //habilita o form clientes dentro do desktop pane
+        desktop.add(os);
+
+    }//GEN-LAST:event_menCadOsActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
