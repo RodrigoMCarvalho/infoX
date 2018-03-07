@@ -31,6 +31,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menAjuda = new javax.swing.JMenu();
         menAjudaSob = new javax.swing.JMenuItem();
         menOpcoes = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         menOpcoesSair = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -119,6 +120,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menu.add(menAjuda);
 
         menOpcoes.setText("Opções");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem1.setText("Logoff");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menOpcoes.add(jMenuItem1);
 
         menOpcoesSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.ALT_MASK));
         menOpcoesSair.setText("Sair");
@@ -244,6 +254,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_menCadOsActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        //realizar logoff no sistema e retornar a tela de login
+        TelaLogin login = new TelaLogin();
+        login.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -279,6 +296,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JLabel lblData;
     public static javax.swing.JLabel lblUsuario;
     private javax.swing.JMenu menAjuda;
