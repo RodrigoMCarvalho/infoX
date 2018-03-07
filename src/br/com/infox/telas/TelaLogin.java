@@ -22,11 +22,12 @@ public class TelaLogin extends javax.swing.JFrame {
 
             //se existir usuário e senha correspondente
             if (rs.next()) {
-                //verifica o campo(6) perfil da tabela no BD
+                //verifica o campo(6) perfil da tabela no BD(admin ou usuário comum)
                 String perfil = rs.getString(6);
-                //System.out.println(perfil); Para verificar se a varável perfil obteve o campo perfil da tbusuarios
+                //System.out.println(perfil); Para testar se a varável perfil obteve o campo perfil da tbusuarios
 
                 //tratamento do perfil do usuário
+                //Admin
                 if (perfil.equals("admin")) {
                     TelaPrincipal principal = new TelaPrincipal();
                     principal.setVisible(true);
@@ -36,9 +37,10 @@ public class TelaLogin extends javax.swing.JFrame {
                     this.dispose();   //fecha a tela de login, após fechar conexão com o BD
                     conexao.close();
                 } else {
+                    //usuário comum
                     TelaPrincipal principa = new TelaPrincipal();
                     principa.setVisible(true);
-                    TelaPrincipal.lblUsuario.setText(rs.getString(2));
+                    TelaPrincipal.lblUsuario.setText(rs.getString(2)); //mostra o nome do usuário
                     this.dispose();
                     conexao.close();
                 }
@@ -59,7 +61,7 @@ public class TelaLogin extends javax.swing.JFrame {
         //chama o método conector da classe ModuloConexao com os dados do BD
         conexao = ModuloConexao.conector();
 
-        //System.out.println(conexao);
+        //System.out.println(conexao); *** teste ***
         //testa se a conexão com o BD está disponível
         if (conexao != null) {
             lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/dbok.png")));
