@@ -255,10 +255,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menCadOsActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        //realizar logoff no sistema e retornar a tela de login
-        TelaLogin login = new TelaLogin();
-        login.setVisible(true);
-        dispose();
+
+        int confirma = JOptionPane.showConfirmDialog(null, "Deseja realizar logoff do sistema?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            //realizar logoff no sistema e retornar a tela de login
+            TelaLogin login = new TelaLogin();
+            login.setVisible(true);
+            dispose();
+        }
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public static void main(String args[]) {

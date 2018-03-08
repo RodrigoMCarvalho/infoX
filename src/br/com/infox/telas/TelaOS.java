@@ -1,6 +1,7 @@
 package br.com.infox.telas;
 
 import br.com.infox.dal.ModuloConexao;
+import java.awt.HeadlessException;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,6 @@ public class TelaOS extends javax.swing.JInternalFrame {
         txtOsTec.setText(null);
         txtOsValor.setText(null);
         txtOsServ.setText(null);
-
     }
 
     private void pesquisarClientes() {
@@ -57,7 +57,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, tipo); //o conteúdo da variável "tipo" sera obtido ao selecionar o radion button.Vide abaixo.
+            pst.setString(1, tipo); //o conteúdo da variável "tipo" sera obtido ao selecionar o radion button.Vide mais abaixo.
             pst.setString(2, cboOsSit.getSelectedItem().toString()); //devido ser um combo box
             pst.setString(3, txtOsEquip.getText());
             pst.setString(4, txtOsDef.getText());
@@ -80,6 +80,103 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    private void pesquisarOS() {
+        String numOs = JOptionPane.showInputDialog("Número da OS:");
+        String sql = "select * from tbos where os= " + numOs;
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                //preenchendo as caixas de texto com os dados do BD
+                txtOS.setText(rs.getString(1)); //1 referente a posição na tabela
+                txtData.setText(rs.getString(2));
+                //setando os radio buttons
+                String rbtTipo = rs.getString(3);
+                if (rbtTipo.equals("OS")) {
+                    rbtOs.setSelected(true);
+                    tipo = "OS";
+                } else {
+                    rbtOrc.setSelected(true);
+                    tipo = "Orçamento";
+                }
+                cboOsSit.setSelectedItem(rs.getString(4));
+                txtOsEquip.setText(rs.getString(5));
+                txtOsServ.setText(rs.getString(6));
+                txtOsDef.setText(rs.getString(7));
+                txtOsTec.setText(rs.getString(8));
+                txtOsValor.setText(rs.getString(9));
+                txtCliID.setText(rs.getString(10));
+                //desabilitando alguns recursos para não haver problemas de sobrepor
+                btnAdicionar.setEnabled(false);
+                txtPesquisar.setEnabled(false);
+                tblClientes.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(null, "OS não localizada.");
+            }
+            //caso o usuário insira letras, irá executar o comando abaixo
+            //visto que no BD o campo é INT
+        } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException e) {
+            JOptionPane.showMessageDialog(null, "ERRO: Coloque apenas números!");
+            //System.out.println(e); *** usado para capturar o erro "com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException" no terminal ao digitar letras no campo ***
+        } catch (Exception e2) {
+            JOptionPane.showMessageDialog(null, e2);
+        }
+    }
+
+    private void alterarOS() {
+        String sql = "update tbos set tipo=?,situacao=?,equipamento=?,defeito=?,servico=?,tecnico=?,valor=? where os=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, tipo);
+            pst.setString(2, cboOsSit.getSelectedItem().toString());
+            pst.setString(3, txtOsDef.getText());
+            pst.setString(4, txtOsDef.getText());
+            pst.setString(5, txtOsServ.getText());
+            pst.setString(6, txtOsTec.getText());
+            pst.setString(7, txtOsValor.getText().replace(",", "."));
+            pst.setString(8, txtOS.getText());
+
+            //validação dos campos obrigatórios
+            if (txtCliID.getText().isEmpty() || txtOsEquip.getText().isEmpty()
+                    || txtOsDef.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.");
+            } else {
+                int confirma = pst.executeUpdate();
+                if (confirma > 0) {
+                    JOptionPane.showMessageDialog(null, "OS alterada com sucesso!");
+                    txtOS.setText(null);
+                    txtData.setText(null);
+                    limparCampos();
+                    btnAdicionar.setEnabled(true);
+                    txtPesquisar.setEnabled(true);
+                    tblClientes.setEnabled(true);
+                }
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    private void excluirOS() {
+        int confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir essa OS?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            String sql = "delete from tbos where os=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtOS.getText());
+                int removido = pst.executeUpdate();
+                if (removido > 0) {
+                    JOptionPane.showMessageDialog(null, "OS excluída com sucesso!");
+                    txtData.setText(null);
+                    txtOS.setText(null);
+                    limparCampos();
+                }
+            } catch (Exception e) {
+            }
         }
 
     }
@@ -151,7 +248,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Nº OS");
 
-        jLabel2.setText("Data");
+        jLabel2.setText("Data e Hora");
 
         txtOS.setEditable(false);
 
@@ -181,18 +278,17 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(rbtOrc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addComponent(rbtOs))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(txtOS, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(67, 67, 67)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(0, 39, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(rbtOrc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(rbtOs)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -312,14 +408,29 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/Read.png"))); // NOI18N
         btnPesquisar.setToolTipText("Pesquisar");
         btnPesquisar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/Update.png"))); // NOI18N
         btnAlterar.setToolTipText("Alterar");
         btnAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/Delete.png"))); // NOI18N
         btnRemover.setToolTipText("Remover");
         btnRemover.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
 
         btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/printer.png"))); // NOI18N
         btnImprimir.setToolTipText("Imprimir");
@@ -455,6 +566,21 @@ public class TelaOS extends javax.swing.JInternalFrame {
         //chama o método para emitir OS e inserir no BD
         emitirOS();
     }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+
+        pesquisarOS();
+    }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+
+        alterarOS();
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+
+        excluirOS();
+    }//GEN-LAST:event_btnRemoverActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
