@@ -1,16 +1,24 @@
 package br.com.infox.telas;
 
+import java.sql.*;
 import java.beans.PropertyVetoException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import br.com.infox.dal.ModuloConexao;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class TelaPrincipal extends javax.swing.JFrame {
 
+    Connection conexao = null;
+
     public TelaPrincipal() {
         initComponents();
+        conexao = ModuloConexao.conector();
     }
 
     @SuppressWarnings("unchecked")
@@ -27,6 +35,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menCadOs = new javax.swing.JMenuItem();
         menCadUsuarios = new javax.swing.JMenuItem();
         menRela = new javax.swing.JMenu();
+        menRelaCli = new javax.swing.JMenuItem();
         menRelaServ = new javax.swing.JMenuItem();
         menAjuda = new javax.swing.JMenu();
         menAjudaSob = new javax.swing.JMenuItem();
@@ -99,6 +108,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menRela.setText("Relatório");
         menRela.setEnabled(false);
+
+        menRelaCli.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
+        menRelaCli.setText("Clientes");
+        menRelaCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menRelaCliActionPerformed(evt);
+            }
+        });
+        menRela.add(menRelaCli);
 
         menRelaServ.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
         menRelaServ.setText("Serviços");
@@ -202,6 +220,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Date data = new Date();
         DateFormat formato = DateFormat.getDateInstance(DateFormat.SHORT);
         lblData.setText(formato.format(data));
+
     }//GEN-LAST:event_formWindowActivated
 
     private void menOpcoesSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menOpcoesSairActionPerformed
@@ -256,6 +275,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
+        //mensagem de confirmação antes de realizar logoff
         int confirma = JOptionPane.showConfirmDialog(null, "Deseja realizar logoff do sistema?", "Atenção", JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION) {
             //realizar logoff no sistema e retornar a tela de login
@@ -265,6 +285,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void menRelaCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menRelaCliActionPerformed
+
+        //confirmação para emissão do relatório utilizando o Jasper/iReport
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a emissão desse relatório?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            //imprimindo relatório com o framework JasperReports
+            try {
+                //usando a classe JasperPrint para imprimir o relatório
+                JasperPrint print;
+                print = JasperFillManager.fillReport("C:\\Users\\rodri_000\\Documents\\NetBeansProjects\\ProjetoInfoX\\src\\br\\com\\infox\\dal\\clientes.jasper", null, conexao);
+                //a linha abaixo exibe o relatório através da classe JasperViewer
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+
+    }//GEN-LAST:event_menRelaCliActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -313,6 +352,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu menOpcoes;
     private javax.swing.JMenuItem menOpcoesSair;
     public static javax.swing.JMenu menRela;
+    private javax.swing.JMenuItem menRelaCli;
     private javax.swing.JMenuItem menRelaServ;
     private javax.swing.JMenuBar menu;
     // End of variables declaration//GEN-END:variables
