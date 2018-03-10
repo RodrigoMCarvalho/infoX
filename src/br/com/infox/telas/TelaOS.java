@@ -187,13 +187,14 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
     private void imprimirOS() {
         //confirmação para emissão do relatório utilizando o Jasper/iReport
-        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a emissão do relatório de clientes?", "Atenção", JOptionPane.YES_NO_OPTION);
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a emissão do relatório da OS?", "Atenção", JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION) {
             //imprimindo relatório com o framework JasperReports
             try {
                 //usando a classe HashMap para criar um filtro
                 HashMap filtro = new HashMap();
-                filtro.put("os", Integer.parseInt(txtOS.getText()));
+                //"os" é referente ao parâmetro criado no iReport
+                filtro.put("os", Integer.parseInt(txtOS.getText()));//OS emitida conforma valor da variavel "txtOS"
 
                 //usando a classe JasperPrint para imprimir o relatório
                 JasperPrint print;
@@ -204,7 +205,6 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-
     }
 
     @SuppressWarnings("unchecked")
