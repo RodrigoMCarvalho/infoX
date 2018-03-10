@@ -3,11 +3,15 @@ package br.com.infox.telas;
 import br.com.infox.dal.ModuloConexao;
 import java.awt.HeadlessException;
 import java.sql.*;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 //a linha abaixo importa recursos da lib rs2xml.jar. Download: https://sourceforge.net/projects/finalangelsanddemons/?source=directory﻿
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class TelaOS extends javax.swing.JInternalFrame {
 
@@ -132,7 +136,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, tipo);
             pst.setString(2, cboOsSit.getSelectedItem().toString());
-            pst.setString(3, txtOsDef.getText());
+            pst.setString(3, txtOsEquip.getText());
             pst.setString(4, txtOsDef.getText());
             pst.setString(5, txtOsServ.getText());
             pst.setString(6, txtOsTec.getText());
@@ -181,6 +185,28 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
     }
 
+    private void imprimirOS() {
+        //confirmação para emissão do relatório utilizando o Jasper/iReport
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma a emissão do relatório de clientes?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            //imprimindo relatório com o framework JasperReports
+            try {
+                //usando a classe HashMap para criar um filtro
+                HashMap filtro = new HashMap();
+                filtro.put("os", Integer.parseInt(txtOS.getText()));
+
+                //usando a classe JasperPrint para imprimir o relatório
+                JasperPrint print;
+                print = JasperFillManager.fillReport("C:\\Users\\rodri_000\\Documents\\NetBeansProjects\\ProjetoInfoX\\src\\ireport\\ros.jasper", filtro, conexao);
+                //a linha abaixo exibe o relatório através da classe JasperViewer
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -219,7 +245,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnRemover = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
@@ -435,6 +461,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/printer.png"))); // NOI18N
         btnImprimir.setToolTipText("Imprimir");
         btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -581,6 +612,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         excluirOS();
     }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+
+        imprimirOS();
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
