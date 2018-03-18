@@ -50,7 +50,7 @@ public class TelaLogin extends javax.swing.JFrame {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println("Erro: " + e);;
         }
     }
 

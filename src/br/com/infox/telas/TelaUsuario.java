@@ -50,8 +50,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     limpaCampos();
                 }
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
+            JOptionPane.showMessageDialog(null, "Login já existente!");
+        } catch (Exception e2) {
+            JOptionPane.showMessageDialog(null, e2);
         }
 
     }

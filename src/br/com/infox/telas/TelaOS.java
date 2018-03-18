@@ -1,11 +1,8 @@
 package br.com.infox.telas;
 
 import br.com.infox.dal.ModuloConexao;
-import java.awt.HeadlessException;
 import java.sql.*;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 //a linha abaixo importa recursos da lib rs2xml.jar. Download: https://sourceforge.net/projects/finalangelsanddemons/?source=directory﻿
 import net.proteanit.sql.DbUtils;

@@ -316,10 +316,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         int confirma = JOptionPane.showConfirmDialog(null, "Confirma a emissão do relatório de serviços?", "Atenção", JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION) {
-            JasperPrint printServ;
+
             try {
+                JasperPrint printServ;
                 printServ = JasperFillManager.fillReport("C:\\Users\\rodri_000\\Documents\\NetBeansProjects\\ProjetoInfoX\\src\\ireport\\servicos.jasper", null, conexao);
-                JasperViewer.viewReport(printServ);
+                JasperViewer.viewReport(printServ, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }

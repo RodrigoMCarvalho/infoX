@@ -80,28 +80,28 @@ where OSER.os = $P{os}]]>
                     <textFieldExpression><![CDATA[$F{telefone}]]></textFieldExpression>
                 </textField>
                 <staticText>
-                    <reportElement style="Column header" x="402" y="0" width="62" height="18" forecolor="#000000" uuid="4f03329c-1bc1-4700-b826-5999d54dc1b2"/>
+                    <reportElement style="Column header" x="389" y="18" width="62" height="18" forecolor="#000000" uuid="4f03329c-1bc1-4700-b826-5999d54dc1b2"/>
                     <textElement>
                         <font isBold="false"/>
                     </textElement>
                     <text><![CDATA[Valor: R$]]></text>
                 </staticText>
                 <textField isStretchWithOverflow="true">
-                    <reportElement style="Detail" positionType="Float" x="464" y="0" width="59" height="18" uuid="a7d2955b-2edd-4bba-93ea-dc8bfaad5635"/>
+                    <reportElement style="Detail" positionType="Float" x="451" y="18" width="59" height="18" uuid="a7d2955b-2edd-4bba-93ea-dc8bfaad5635"/>
                     <textElement>
                         <font size="14"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
                 </textField>
                 <staticText>
-                    <reportElement style="Column header" x="302" y="47" width="131" height="18" forecolor="#000000" uuid="9cfa97f1-1b4f-441b-b670-d2492bae3c42"/>
+                    <reportElement style="Column header" x="258" y="47" width="131" height="18" forecolor="#000000" uuid="9cfa97f1-1b4f-441b-b670-d2492bae3c42"/>
                     <textElement>
                         <font isBold="true"/>
                     </textElement>
                     <text><![CDATA[Técnico responsável: ]]></text>
                 </staticText>
                 <textField isStretchWithOverflow="true">
-                    <reportElement style="Detail" positionType="Float" x="433" y="47" width="125" height="18" forecolor="#000000" uuid="4690b719-8555-4b42-b380-8cfe26ac59f9"/>
+                    <reportElement style="Detail" positionType="Float" x="389" y="47" width="125" height="18" forecolor="#000000" uuid="4690b719-8555-4b42-b380-8cfe26ac59f9"/>
                     <textElement>
                         <font size="14" isBold="true"/>
                     </textElement>
